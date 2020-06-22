@@ -1,5 +1,5 @@
 //
-//  MovieDetail.swift
+//  DetailMovie.swift
 //  MovieApp
 //
 //  Created by Jonathan Garcia on 21/06/2020.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieDetail: Codable {
+struct DetailMovie: Codable {
     var id: Int?
     var title: String?
     var releaseDate: String?
