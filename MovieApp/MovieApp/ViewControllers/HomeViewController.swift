@@ -23,7 +23,7 @@ final class HomeViewController: UIViewController {
         configNavBar()
     }
     
-    func configWith(viewModel: HomeViewModelProtocol) {
+    func configWithViewModel(_ viewModel: HomeViewModelProtocol) {
         self.viewModel = viewModel
     }
     
