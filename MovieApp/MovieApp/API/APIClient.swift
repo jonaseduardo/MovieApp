@@ -23,7 +23,12 @@ final class APIClient {
         get(endPoint: endPoint, parameters: parameters, completion: completion)
     }
     
-    func get<ResponseType: Decodable>(endPoint: String, parameters: [String : Any], completion: @escaping CompletionHandler<ResponseType>) {
+    func getDetailMovieForId(id: String, completion: @escaping CompletionHandler<DetailMovie>) {
+        let endPoint = "movie/\(id)"
+        get(endPoint: endPoint, completion: completion)
+    }
+    
+    func get<ResponseType: Decodable>(endPoint: String, parameters: [String : Any]? = nil, completion: @escaping CompletionHandler<ResponseType>) {
         let url = "\(baseUrl)\(apiVersion)/\(endPoint)"
 
         AF.request(url, parameters: parameters, headers: headers()).validate().responseDecodable(of: ResponseType.self) { response in
@@ -34,8 +39,8 @@ final class APIClient {
                 if let data = response.data {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let customError = try? decoder.decode(ServerError.self, from: data)
-                    completion(.failure(.serverError(customError)))
+                    let genericError = try? decoder.decode(GenericError.self, from: data)
+                    completion(.failure(.genericError(genericError)))
                     return
                 }
                 completion(.failure(.unknownError))
@@ -57,12 +62,12 @@ final class APIClient {
     }
     
     enum Failure: Error {
-        case serverError(ServerError?)
+        case genericError(GenericError?)
         case unknownError
         case invalidImage
     }
     
-    struct ServerError: Codable {
+    struct GenericError: Codable {
         var statusCode: Int?
         var statusMessage: String?
     }

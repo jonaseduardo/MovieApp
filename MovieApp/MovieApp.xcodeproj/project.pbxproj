@@ -139,9 +139,10 @@
 			children = (
 				68C876F124A050E4009EF7D4 /* Views */,
 				68C876F024A04C6F009EF7D4 /* ViewModels */,
+				68C876E524A02329009EF7D4 /* ViewControllers */,
 				68C876EB24A028B7009EF7D4 /* Models */,
 				68C876E824A02846009EF7D4 /* API */,
-				68C876E524A02329009EF7D4 /* ViewControllers */,
+				68C8770824A3D38E009EF7D4 /* Extensions */,
 				68C876C124A01466009EF7D4 /* AppDelegate.swift */,
 				68C876C324A01466009EF7D4 /* SceneDelegate.swift */,
 				68C876C724A01466009EF7D4 /* Main.storyboard */,
@@ -166,7 +167,6 @@
 			children = (
 				68C876E624A02340009EF7D4 /* HomeViewController.swift */,
 				68C876F424A0F819009EF7D4 /* DetailMovieViewController.swift */,
-				68C876FC24A1549D009EF7D4 /* UIViewController+Extension.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -193,10 +193,10 @@
 			isa = PBXGroup;
 			children = (
 				68C876F824A10AAD009EF7D4 /* Box.swift */,
-				68C876F624A109B2009EF7D4 /* DetailMovieViewModel.swift */,
 				68C876FA24A14B7E009EF7D4 /* HomeViewModel.swift */,
 				68C876FE24A26B6E009EF7D4 /* CategoryDataViewModel.swift */,
 				68C8770424A38B18009EF7D4 /* MovieViewModel.swift */,
+				68C876F624A109B2009EF7D4 /* DetailMovieViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -208,6 +208,14 @@
 				68C8770224A38A16009EF7D4 /* MovieCollectionViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		68C8770824A3D38E009EF7D4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				68C876FC24A1549D009EF7D4 /* UIViewController+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

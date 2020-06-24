@@ -6,8 +6,6 @@
 //  Copyright © 2020 Jonathan Garcia. All rights reserved.
 //
 
-import Foundation
-
 struct DetailMovie: Codable {
     var id: Int?
     var title: String?
@@ -16,4 +14,11 @@ struct DetailMovie: Codable {
     var overview: String?
     var posterPath: String?
     var voteAverage: Double?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, title, homepage, overview
+        case releaseDate = "release_date"
+        case posterPath = "poster_path"
+        case voteAverage = "vote_average"
+    }
 }

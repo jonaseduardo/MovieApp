@@ -11,7 +11,7 @@ import UIKit
 protocol MovieViewModelProtocol {
     var movie: Movie { get set }
     var movieImage: Box<UIImage> { get set }
-    
+    var movieId: String { get }
     init(movie: Movie)
     func loadImage()
 }
@@ -19,6 +19,11 @@ protocol MovieViewModelProtocol {
 final class MovieViewModel: MovieViewModelProtocol {
     var movie: Movie
     var movieImage: Box<UIImage> = Box(UIImage())
+    
+    var movieId: String {
+        guard let movieId = movie.id else { return "" }
+        return String(movieId)
+    }
     
     init(movie: Movie) {
         self.movie = movie

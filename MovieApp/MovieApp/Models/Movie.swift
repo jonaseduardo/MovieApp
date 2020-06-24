@@ -6,8 +6,6 @@
 //  Copyright © 2020 Jonathan Garcia. All rights reserved.
 //
 
-import Foundation
-
 struct Movie: Codable {
     var id: Int?
     var title: String?

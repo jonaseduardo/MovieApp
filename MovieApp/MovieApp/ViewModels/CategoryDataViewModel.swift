@@ -33,12 +33,12 @@ final class CategoryDataViewModel: CategoryDataViewModelProtocol {
         apiClient.getMoviesForCategory(type, page: currentPage) { result in
             switch result {
             case .success(let movies):
-                print(movies)
                 self.currentPage += 1
                 let moviesViewModels = self.createMovieViewModels(movies: movies.items)
                 self.movies.value = self.movies.value + moviesViewModels
             case .failure(let error):
                 print(error)
+                self.movies.value = self.movies.value
             }
         }
     }

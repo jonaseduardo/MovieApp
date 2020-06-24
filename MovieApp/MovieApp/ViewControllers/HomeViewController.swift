@@ -49,7 +49,7 @@ extension HomeViewController: UITableViewDataSource {
         }
         let category = viewModel?.getCategory(index: indexPath.row)
         cell.configure(withViewModel: CategoryDataViewModel(category: category))
-        cell.layoutIfNeeded()
+        cell.delegate = self
         return cell
     }
 }
@@ -57,5 +57,17 @@ extension HomeViewController: UITableViewDataSource {
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return kCellSize
+    }
+}
+
+extension HomeViewController: CategoryTableViewCellDelegate {
+    func categoryTableViewCell(_ categoryTableViewCell: CategoryTableViewCell, didSelectMovie movieId: String) {
+        
+        guard let detailMovieViewController = DetailMovieViewController.instance(from: "Main", controllerIdentifier: "DetailMovieViewController") as? DetailMovieViewController else {
+             fatalError("Unable to instantiate an ViewController from the storyboard")
+        }
+        let viewModel = DetailMovieViewModel(movieId: movieId)
+        detailMovieViewController.configure(withViewModel: viewModel)
+        self.navigationController?.pushViewController(detailMovieViewController, animated: true)
     }
 }

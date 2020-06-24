@@ -8,12 +8,18 @@
 
 import UIKit
 
+protocol CategoryTableViewCellDelegate: class {
+    func categoryTableViewCell(_ categoryTableViewCell: CategoryTableViewCell, didSelectMovie movieId: String)
+}
+
 final class CategoryTableViewCell: UITableViewCell {
     
     private let kCellIdentifier = "MovieCell"
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var collectionView: UICollectionView!
+    
+    weak var delegate: CategoryTableViewCellDelegate?
     
     var viewModel: CategoryDataViewModelProtocol?
     
@@ -38,7 +44,7 @@ final class CategoryTableViewCell: UITableViewCell {
     
     func reload(collectionView: UICollectionView) {
         
-        var contentOffset = collectionView.contentOffset
+        let contentOffset = collectionView.contentOffset
         collectionView.reloadData()
         collectionView.layoutIfNeeded()
         collectionView.setContentOffset(contentOffset, animated: false)
@@ -69,7 +75,10 @@ extension CategoryTableViewCell: UICollectionViewDataSource {
 
 extension CategoryTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let viewModel = self.viewModel?.getMovieViewModel(index: indexPath.row)
+        if let movieId = viewModel?.movieId {
+            delegate?.categoryTableViewCell(self, didSelectMovie: movieId)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
