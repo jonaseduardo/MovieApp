@@ -15,21 +15,45 @@ final class CategoryTableViewCell: UITableViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var collectionView: UICollectionView!
     
+    var viewModel: CategoryDataViewModelProtocol?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        configCollectionView()
+    }
+    
+    func configure(withViewModel viewModel: CategoryDataViewModelProtocol?) {
+        self.viewModel = viewModel
+        
+        bindViewModel()
+        viewModel?.getMovies(page: 0)
+        titleLabel.text = viewModel?.categoryName
+    }
+    
+    func configCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
+    }
+    
+    func bindViewModel() {
+        viewModel?.movies.bind { [weak self] _ in
+            self?.collectionView.reloadData()
+        }
     }
 }
 
 extension CategoryTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel?.itemCount ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCellIdentifier, for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCellIdentifier, for: indexPath) as? MovieCollectionViewCell else {
+            fatalError("Could not dequeue MovieCollectionViewCell")
+        }
+        let viewModel = self.viewModel?.getMovieViewModel(index: indexPath.row)
+        cell.configure(withViewModel: viewModel)
         return cell
     }
 }

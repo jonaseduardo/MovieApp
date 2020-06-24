@@ -23,7 +23,7 @@ final class HomeViewController: UIViewController {
         configNavBar()
     }
     
-    func configWithViewModel(_ viewModel: HomeViewModelProtocol) {
+    func configure(withViewModel viewModel: HomeViewModelProtocol) {
         self.viewModel = viewModel
     }
     
@@ -45,8 +45,10 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier, for: indexPath) as? CategoryTableViewCell else {
-            fatalError("Could not dequeue")
+            fatalError("Could not dequeue CategoryTableViewCell")
         }
+        let category = viewModel?.getCategory(index: indexPath.row)
+        cell.configure(withViewModel: CategoryDataViewModel(category: category) )
         return cell
     }
 }

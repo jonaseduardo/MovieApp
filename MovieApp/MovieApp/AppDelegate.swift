@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
              fatalError("Unable to instantiate an ViewController from the storyboard")
         }
         let viewModel = HomeViewModel()
-        homeViewController.configWithViewModel(viewModel)
+        homeViewController.configure(withViewModel: viewModel)
         let navigationController = UINavigationController.init(rootViewController: homeViewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

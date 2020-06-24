@@ -12,12 +12,17 @@ struct Movie: Codable {
     var id: Int?
     var title: String?
     var posterPath: String?
+    
+    private enum CodingKeys: String, CodingKey {
+        case id, title
+        case posterPath = "poster_path"
+    }
 }
 
 struct Movies: Codable {
-    let movies: [Movie]
+    let items: [Movie]
     
     private enum CodingKeys: String, CodingKey {
-        case movies = "results"
+        case items = "results"
     }
 }

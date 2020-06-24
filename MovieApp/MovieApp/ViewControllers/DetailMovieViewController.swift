@@ -9,7 +9,13 @@
 import UIKit
 
 final class DetailMovieViewController: UIViewController {
-
+    
+    @IBOutlet private weak var posterImage: UIImageView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var releaseDateLabel: UILabel!
+    @IBOutlet private weak var voteAverageLabel: UILabel!
+    @IBOutlet private weak var overviewLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

@@ -7,12 +7,25 @@
 //
 
 protocol HomeViewModelProtocol {
+    var categories: [Category] { get set }
     var itemCount: Int { get }
+    
+    func getCategory(index: Int) -> Category
 }
 
 final class HomeViewModel: HomeViewModelProtocol {
+    var categories: [Category]
     var itemCount: Int {
-        return 3
-        
+        return categories.count
+    }
+    
+    init() {
+        categories = [Category(name: "Popular", type: MoviesCategory.popular),
+                      Category(name: "Top Rated", type: MoviesCategory.topRated),
+                      Category(name: "Upcoming", type: MoviesCategory.upcoming)]
+    }
+    
+    func getCategory(index: Int) -> Category {
+        return categories[index]
     }
 }
