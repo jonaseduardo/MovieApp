@@ -19,14 +19,14 @@ final class APIClient {
     
     func getMoviesForCategory(_ moviesCategory: MoviesCategory, page: Int, completion: @escaping CompletionHandler<Movies>) {
         let endPoint = "movie/\(moviesCategory.rawValue)"
-        let parameters = ["page" : String(page)]
+        let parameters = ["page":page]
         get(endPoint: endPoint, parameters: parameters, completion: completion)
     }
     
-    func get<ResponseType: Decodable>(endPoint: String, parameters: [AnyHashable : Any], completion: @escaping CompletionHandler<ResponseType>) {
+    func get<ResponseType: Decodable>(endPoint: String, parameters: [String : Any], completion: @escaping CompletionHandler<ResponseType>) {
         let url = "\(baseUrl)\(apiVersion)/\(endPoint)"
 
-        AF.request(url, headers: headers()).validate().responseDecodable(of: ResponseType.self) { response in
+        AF.request(url, parameters: parameters, headers: headers()).validate().responseDecodable(of: ResponseType.self) { response in
             switch response.result {
             case .success(let result):
                 completion(.success(result))

@@ -27,7 +27,7 @@ final class CategoryTableViewCell: UITableViewCell {
         self.viewModel = viewModel
         
         bindViewModel()
-        viewModel?.getMovies(page: 0)
+        viewModel?.getMovies()
         titleLabel.text = viewModel?.categoryName
     }
     
@@ -36,9 +36,18 @@ final class CategoryTableViewCell: UITableViewCell {
         collectionView.delegate = self
     }
     
+    func reload(collectionView: UICollectionView) {
+        
+        var contentOffset = collectionView.contentOffset
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        collectionView.setContentOffset(contentOffset, animated: false)
+    }
+    
     func bindViewModel() {
         viewModel?.movies.bind { [weak self] _ in
-            self?.collectionView.reloadData()
+            guard let self = self else { return }
+            self.reload(collectionView: self.collectionView)
         }
     }
 }
@@ -59,5 +68,20 @@ extension CategoryTableViewCell: UICollectionViewDataSource {
 }
 
 extension CategoryTableViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let itemCount = viewModel?.itemCount else { return }
+        if indexPath.row == itemCount - 1 {
+            viewModel?.getMovies()
+        }
+    }
+}
+
+extension CategoryTableViewCell: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100.0 , height: 150.0)
+    }
 }

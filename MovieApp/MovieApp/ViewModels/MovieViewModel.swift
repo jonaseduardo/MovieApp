@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Alamofire
-import AlamofireImage
 
 protocol MovieViewModelProtocol {
     var movie: Movie { get set }
@@ -34,9 +32,9 @@ final class MovieViewModel: MovieViewModelProtocol {
             case .success(let image):
                 self.movieImage.value = image
             case .failure:
-                self.movieImage.value = UIImage() //
+                break
+                //self.movieImage.value = UIImage() //
             }
         }
     }
-    
 }

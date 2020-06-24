@@ -20,7 +20,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configNavBar()
+        configNavBar()        
     }
     
     func configure(withViewModel viewModel: HomeViewModelProtocol) {
@@ -48,7 +48,8 @@ extension HomeViewController: UITableViewDataSource {
             fatalError("Could not dequeue CategoryTableViewCell")
         }
         let category = viewModel?.getCategory(index: indexPath.row)
-        cell.configure(withViewModel: CategoryDataViewModel(category: category) )
+        cell.configure(withViewModel: CategoryDataViewModel(category: category))
+        cell.layoutIfNeeded()
         return cell
     }
 }

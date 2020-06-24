@@ -12,7 +12,7 @@ protocol CategoryDataViewModelProtocol {
     var itemCount: Int { get }
     
     init(category: Category?)
-    func getMovies(page: Int)
+    func getMovies()
     func getMovieViewModel(index: Int) -> MovieViewModelProtocol?
 }
 
@@ -21,25 +21,22 @@ final class CategoryDataViewModel: CategoryDataViewModelProtocol {
     var apiClient = APIClient()
     var movies: Box<[MovieViewModelProtocol]> = Box([MovieViewModelProtocol]())
     
-    var categoryName: String  {
-        return category?.name ?? ""
-    }
-    
-    var itemCount: Int {
-        return movies.value.count
-    }
-    
+    var currentPage: Int = 1
+        
     init(category: Category?) {
         self.category =  category
     }
     
-    func getMovies(page: Int) {
-        let type = category?.type ?? .popular
-        apiClient.getMoviesForCategory(type, page: 0) { result in
+    func getMovies() {
+        guard let type = category?.type else { return }
+        
+        apiClient.getMoviesForCategory(type, page: currentPage) { result in
             switch result {
             case .success(let movies):
                 print(movies)
-                self.movies.value = self.createMovieViewModels(movies: movies.items)
+                self.currentPage += 1
+                let moviesViewModels = self.createMovieViewModels(movies: movies.items)
+                self.movies.value = self.movies.value + moviesViewModels
             case .failure(let error):
                 print(error)
             }
@@ -55,5 +52,15 @@ final class CategoryDataViewModel: CategoryDataViewModelProtocol {
             MovieViewModel(movie: movie)
         }
         return viewModels
+    }
+}
+
+extension CategoryDataViewModel {
+    var categoryName: String  {
+        return category?.name ?? ""
+    }
+    
+    var itemCount: Int {
+        return movies.value.count
     }
 }
