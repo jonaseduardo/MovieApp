@@ -11,23 +11,12 @@ import AlamofireImage
 
 final class APIClient {
     
-    private let baseUrl = "https://api.themoviedb.org"
-    private let imageBaseUrl = "https://image.tmdb.org/t/p/"
-    private let apiVersion: String = "/3"
+    let baseUrl = "https://api.themoviedb.org"
+    let imageBaseUrl = "https://image.tmdb.org/t/p/"
+    let apiVersion: String = "/3"
     typealias RequestResult<T> = Result<T, Failure>
     typealias CompletionHandler<T> = (RequestResult<T>) -> Void
-    
-    func getMoviesForCategory(_ moviesCategory: MoviesCategory, page: Int, completion: @escaping CompletionHandler<Movies>) {
-        let endPoint = "movie/\(moviesCategory.rawValue)"
-        let parameters = ["page":page]
-        get(endPoint: endPoint, parameters: parameters, completion: completion)
-    }
-    
-    func getDetailMovieForId(id: String, completion: @escaping CompletionHandler<DetailMovie>) {
-        let endPoint = "movie/\(id)"
-        get(endPoint: endPoint, completion: completion)
-    }
-    
+
     func get<ResponseType: Decodable>(endPoint: String, parameters: [String : Any]? = nil, completion: @escaping CompletionHandler<ResponseType>) {
         let url = "\(baseUrl)\(apiVersion)/\(endPoint)"
 
@@ -44,19 +33,6 @@ final class APIClient {
                     return
                 }
                 completion(.failure(.unknownError))
-            }
-        }
-    }
-    
-    func requestImage(posterPath: String, size: String = "w200", completion: @escaping CompletionHandler<UIImage>) {
-        let url = "\(imageBaseUrl)\(size)/\(posterPath)"
-        
-        AF.request(url).responseImage { response in
-            switch response.result {
-            case .success(let image):
-                completion(.success(image))
-            case .failure:
-                completion(.failure(.invalidImage))
             }
         }
     }

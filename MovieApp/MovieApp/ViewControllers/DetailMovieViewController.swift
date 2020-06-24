@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import youtube_ios_player_helper
 
 final class DetailMovieViewController: UIViewController {
     
@@ -15,6 +16,7 @@ final class DetailMovieViewController: UIViewController {
     @IBOutlet private weak var releaseDateLabel: UILabel!
     @IBOutlet private weak var voteAverageLabel: UILabel!
     @IBOutlet private weak var overviewLabel: UILabel!
+    @IBOutlet weak var playerView: YTPlayerView!
     
     var viewModel: DetailMovieViewModelProtocol?
     
@@ -39,6 +41,12 @@ final class DetailMovieViewController: UIViewController {
         viewModel?.movieImage.bind { [weak self] image in
             self?.posterImage.image = image
         }
+        
+        viewModel?.video.bind { [weak self] video in
+            if let videoId = video.key {
+                self?.loadVideo(videoId: videoId)
+            }
+        }
     }
     
     func showMovieData() {
@@ -46,5 +54,9 @@ final class DetailMovieViewController: UIViewController {
         releaseDateLabel.text = viewModel?.releaseDate
         voteAverageLabel.text = viewModel?.voteAverage
         overviewLabel.text = viewModel?.overview
+    }
+    
+    func loadVideo(videoId: String) {
+        playerView.load(withVideoId: videoId)
     }
 }

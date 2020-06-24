@@ -8,6 +8,7 @@ target 'MovieApp' do
   pod 'Alamofire'
   pod 'AlamofireImage'
   pod 'RealmSwift'
+  pod 'youtube-ios-player-helper'
 
   target 'MovieAppTests' do
     inherit! :search_paths
