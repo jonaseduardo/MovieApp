@@ -7,14 +7,14 @@
 //
 
 protocol HomeViewModelProtocol {
-    var categories: [Category] { get set }
+    var categories: [Category] { get }
     var itemCount: Int { get }
     
     func getCategory(index: Int) -> Category
 }
 
 final class HomeViewModel: HomeViewModelProtocol {
-    var categories: [Category]
+    let categories: [Category]
     var itemCount: Int {
         return categories.count
     }

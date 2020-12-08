@@ -9,36 +9,36 @@
 import UIKit
 
 protocol MovieViewModelProtocol {
-    var movie: Movie { get set }
-    var movieImage: Box<UIImage> { get set }
+    var movie: Movie { get }
+    var movieImage: Box<UIImage> { get }
     var movieId: String { get }
-    init(movie: Movie)
     func loadImage()
 }
 
 final class MovieViewModel: MovieViewModelProtocol {
     var movie: Movie
     var movieImage: Box<UIImage> = Box(UIImage())
+    private var apiClient: APIClient
     
     var movieId: String {
         guard let movieId = movie.id else { return "" }
         return String(movieId)
     }
     
-    init(movie: Movie) {
+    init(movie: Movie, apiClient: APIClient) {
         self.movie = movie
+        self.apiClient = apiClient
     }
     
     func loadImage() {
         guard let posterPath = movie.posterPath else { return }
         
-        APIClient().requestImage(posterPath: posterPath) { result in
+        apiClient.requestImage(posterPath: posterPath) { result in
             switch result {
             case .success(let image):
                 self.movieImage.value = image
             case .failure:
                 break
-                //self.movieImage.value = UIImage() //
             }
         }
     }

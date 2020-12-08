@@ -10,8 +10,8 @@ import Alamofire
 import AlamofireImage
 
 protocol DetailMovieViewModelProtocol {
-    var movieImage: Box<UIImage> { get set }
-    var movieIsLoaded: Box<Bool> { get set }
+    var movieImage: Box<UIImage> { get }
+    var movieIsLoaded: Box<Bool> { get }
     var video: Box<Video> { get }
     var title: String { get }
     var releaseDate: String { get }
@@ -19,7 +19,6 @@ protocol DetailMovieViewModelProtocol {
     var overview: String { get }
     var voteAverage: String { get }
     
-    init(movieId: String)
     func getDetailMovie()
 }
 
@@ -30,13 +29,15 @@ final class DetailMovieViewModel: DetailMovieViewModelProtocol {
 
     private var movie: DetailMovie?
     private var movieId: String
+    private var apiClient: APIClient
     
-    init(movieId: String) {
+    init(movieId: String, apiClient: APIClient) {
         self.movieId = movieId
+        self.apiClient = apiClient
     }
 
     func getDetailMovie() {
-        APIClient().getDetailMovieForId(id: movieId) { [weak self] result in
+        apiClient.getDetailMovieForId(id: movieId) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -45,7 +46,7 @@ final class DetailMovieViewModel: DetailMovieViewModelProtocol {
                 self.movieIsLoaded.value = true
                 self.loadImage()
                 self.getVideos(movieId: self.movieId)
-            case .failure(let error):
+            case .failure(_):
                 break
             }
         }
@@ -54,10 +55,12 @@ final class DetailMovieViewModel: DetailMovieViewModelProtocol {
     func loadImage() {
         guard let posterPath = movie?.posterPath else { return }
         
-        APIClient().requestImage(posterPath: posterPath) { [weak self] result in
+        apiClient.requestImage(posterPath: posterPath) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let image):
-                self?.movieImage.value = image
+                self.movieImage.value = image
             case .failure:
                 break
             }
@@ -65,12 +68,14 @@ final class DetailMovieViewModel: DetailMovieViewModelProtocol {
     }
     
     func getVideos(movieId: String) {
-        APIClient().getMovieVideos(movieId: movieId) { [weak self] result in
+        apiClient.getMovieVideos(movieId: movieId) { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let videos):
                 print(videos)
                 if let video = videos.items?.first {
-                    self?.video.value = video
+                    self.video.value = video
                 }
             case .failure:
                 break

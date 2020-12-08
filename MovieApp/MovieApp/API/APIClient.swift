@@ -24,26 +24,49 @@ final class APIClient {
             switch response.result {
             case .success(let result):
                 completion(.success(result))
-            case .failure:
-                if let data = response.data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let genericError = try? decoder.decode(GenericError.self, from: data)
-                    completion(.failure(.genericError(genericError)))
-                    return
-                }
-                completion(.failure(.unknownError))
+            case .failure(let error):
+                self.handleError(error: error, data: response.data, completion: completion)
             }
         }
     }
     
+    func handleError<T>(error: AFError, data: Data?, completion: @escaping CompletionHandler<T>) {
+        guard case let .responseValidationFailed(.unacceptableStatusCode(code)) = error else {
+            completion(.failure(.timeout(message: error.errorDescription)))
+            return
+        }
+        
+        switch code {
+        case 400...499:
+            if let data = data {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let apiError = try? decoder.decode(ApiError.self, from: data)
+                if let apiError = apiError {
+                    completion(.failure(.apiError(apiError)))
+                } else {
+                    completion(.failure(.customError(data)))
+                }
+                
+                return
+            }
+        case 500...599:
+            completion(.failure(.serverError(message: error.localizedDescription)))
+        default:
+            completion(.failure(.unknown(message: error.errorDescription)))
+        }
+    }
+    
     enum Failure: Error {
-        case genericError(GenericError?)
-        case unknownError
+        case apiError(ApiError?)
+        case customError(Data?)
+        case timeout(message: String?)
+        case serverError(message: String?)
+        case unknown(message: String?)
         case invalidImage
     }
     
-    struct GenericError: Codable {
+    struct ApiError: Codable {
         var statusCode: Int?
         var statusMessage: String?
     }
@@ -60,10 +83,4 @@ extension APIClient {
         
         return headers
     }
-}
-
-public enum MoviesCategory: String {
-    case popular
-    case topRated = "top_rated"
-    case upcoming
 }

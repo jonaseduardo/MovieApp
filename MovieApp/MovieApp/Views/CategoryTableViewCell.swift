@@ -64,10 +64,11 @@ extension CategoryTableViewCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCellIdentifier, for: indexPath) as? MovieCollectionViewCell else {
-            fatalError("Could not dequeue MovieCollectionViewCell")
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: kCellIdentifier, for: indexPath) as! MovieCollectionViewCell
+        
+        guard let viewModel = self.viewModel?.getMovieViewModel(index: indexPath.row) else {
+            fatalError("Missing viewModel")
         }
-        let viewModel = self.viewModel?.getMovieViewModel(index: indexPath.row)
         cell.configure(withViewModel: viewModel)
         return cell
     }

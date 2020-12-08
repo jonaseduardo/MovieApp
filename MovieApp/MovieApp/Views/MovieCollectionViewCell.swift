@@ -14,11 +14,11 @@ final class MovieCollectionViewCell: UICollectionViewCell {
     
     var viewModel: MovieViewModelProtocol?
     
-    func configure(withViewModel viewModel: MovieViewModelProtocol?) {
+    func configure(withViewModel viewModel: MovieViewModelProtocol) {
         self.viewModel = viewModel
         
         bindViewModel()
-        viewModel?.loadImage()
+        self.viewModel?.loadImage()
     }
     
     func bindViewModel() {

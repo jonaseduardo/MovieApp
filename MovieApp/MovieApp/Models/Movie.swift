@@ -24,3 +24,9 @@ struct Movies: Codable {
         case items = "results"
     }
 }
+
+public enum MoviesCategory: String {
+    case popular
+    case topRated = "top_rated"
+    case upcoming
+}

@@ -44,11 +44,13 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier, for: indexPath) as? CategoryTableViewCell else {
-            fatalError("Could not dequeue CategoryTableViewCell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier, for: indexPath) as! CategoryTableViewCell
+        
+        guard let viewModel = viewModel else {
+            fatalError("Missing viewModel")
         }
-        let category = viewModel?.getCategory(index: indexPath.row)
-        cell.configure(withViewModel: CategoryDataViewModel(category: category))
+        let category = viewModel.getCategory(index: indexPath.row)
+        cell.configure(withViewModel: CategoryDataViewModel(category: category, apiClient: APIClient()))
         cell.delegate = self
         return cell
     }
@@ -63,10 +65,8 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: CategoryTableViewCellDelegate {
     func categoryTableViewCell(_ categoryTableViewCell: CategoryTableViewCell, didSelectMovie movieId: String) {
         
-        guard let detailMovieViewController = DetailMovieViewController.instance(from: "Main", controllerIdentifier: "DetailMovieViewController") as? DetailMovieViewController else {
-             fatalError("Unable to instantiate an ViewController from the storyboard")
-        }
-        let viewModel = DetailMovieViewModel(movieId: movieId)
+        let detailMovieViewController = DetailMovieViewController.instance(from: "Main", controllerIdentifier: "DetailMovieViewController") as! DetailMovieViewController
+        let viewModel = DetailMovieViewModel(movieId: movieId, apiClient: APIClient())
         detailMovieViewController.configure(withViewModel: viewModel)
         self.navigationController?.pushViewController(detailMovieViewController, animated: true)
     }
